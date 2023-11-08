@@ -1,0 +1,4 @@
+.venv/
+__pycache__/
+data/flats_info.csv
+data/test.ipynb
