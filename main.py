@@ -4,12 +4,13 @@ from file_operation import save_to_csv
 import asyncio
 import tracemalloc
 
+
 tracemalloc.start()
 
+URL = 'https://www.cian.ru/cat.php?deal_type=sale&engine_version=2&offer_type=flat&p=1&region=1&room2=1'
 
-
-async def scrape_flats_details() -> None:
-    URL = 'https://www.cian.ru/cat.php?deal_type=sale&engine_version=2&offer_type=flat&p=1&region=1&room2=1'
+async def scrape_flats_details(URL) -> None:
+    
     parser = Flats_URL()
     
     try:
@@ -19,7 +20,7 @@ async def scrape_flats_details() -> None:
         all_flats = []
         all_time_to_metro = []
         
-        # u can add counter
+        # u can add counter 
         k = 0
         while await pagination.HasNextPage() and k < 5:
             k += 1
@@ -31,14 +32,11 @@ async def scrape_flats_details() -> None:
             await pagination.GoToTheNextPage()
             
             
-        #print(all_flats)
         details_parser = Flats_Full_Info()
         detailed_flats = []
         k = 0
         for flat in all_flats:
             await details_parser.get_page(flat)
-            # detailed_flat = details_parser.get_full_info()
-            # detailed_flats.append(detailed_flat)
             await save_to_csv('data/flats_info.csv', (* await details_parser.get_full_info(), all_time_to_metro[k]))
             k += 1
         
@@ -51,6 +49,6 @@ async def scrape_flats_details() -> None:
             parser.driver.close()
     
 if __name__ == '__main__':
-    asyncio.run(scrape_flats_details())
+    asyncio.run(scrape_flats_details(URL))
         
             
