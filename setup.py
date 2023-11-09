@@ -11,7 +11,7 @@ setup(
     author='Anatoly Gvozdev',
     author_email='tolagvgvgvgv@gmail.com',
     license='MIT',
-    packages=['parser_cian'],
+    packages=['cian_parser'],
     long_description=read_me_description,
     long_description_content_type="text/markdown",
     classifiers=[
@@ -20,6 +20,6 @@ setup(
         "Operating System :: OS Independent",
     ],
     keywords='python parser requests cian realestate beautifulsoup dataset',
-    install_requires=['beautifulsoup4', 'selenium', 'lxml', 'selenium-stealth'],
+    install_requires=['beautifulsoup4', 'selenium', 'lxml', 'selenium-stealth', 'aiogram'],
 )
     
