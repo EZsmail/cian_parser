@@ -4,14 +4,14 @@ with open('README.md', encoding='utf8') as file:
     read_me_description = file.read()
     
 setup(
-    name='cian_parser',
+    name='parser_cian',
     version='0.0.1',
     description='Parser for easy data retrieval from cian.ru',
     url='https://github.com/EZsmail/cian_parser',
     author='Anatoly Gvozdev',
     author_email='tolagvgvgvgv@gmail.com',
     license='MIT',
-    packages=['cian_parser'],
+    packages=['parser_cian'],
     long_description=read_me_description,
     long_description_content_type="text/markdown",
     classifiers=[
