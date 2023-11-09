@@ -26,18 +26,18 @@ async def save_to_csv(path: str, data: list) -> None:
                     'price',
                     'time_to_metro',
                     'nearest_metro', 
-                    'price_per_square_meter ',
+                    'price_per_square_meter',
                     'main_square', 
                     'live_square', 
                     'floor',
                     'total_square_footage', 
                     'house_ready_year',
-                    'surrendered_or_not ', 
+                    'surrendered_or_not', 
                     'finishing', 
                     'parking', 
                     'ceiling_height', 
-                    'builder_rating ',
-                    'how_to_get_to_the_subway '
+                    'builder_rating',
+                    'how_to_get_to_the_subway'
                 ]
             )
             writer.writerow(data)

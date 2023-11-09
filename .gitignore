@@ -2,3 +2,7 @@
 __pycache__/
 data/flats_info.csv
 data/test.ipynb
+data
+test.py
+parser_cian/__pycache__
+.DS_Store

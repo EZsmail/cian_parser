@@ -1,6 +1,6 @@
-from flats_parses import Flats_Full_Info, Flats_URL
-from pagination import Pagination
-from file_operation import save_to_csv
+from cian_parser.flats_parses import Flats_Full_Info, Flats_URL
+from cian_parser.pagination import Pagination
+from cian_parser.file_operation import save_to_csv
 import asyncio
 
 
@@ -10,7 +10,7 @@ class Cian_Parser:
         self.url = URL
         self.path = PATH
         
-    async def scrape_flats_details(self) -> None:
+    async def get_data(self) -> None:
         
         parser = Flats_URL()
         
