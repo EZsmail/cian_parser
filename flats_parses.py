@@ -15,7 +15,7 @@ class Flats_URL:
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
         options.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2})
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         
         driver = webdriver.Chrome(options=options)
         stealth(
@@ -65,7 +65,7 @@ class Flats_Full_Info:
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
         options.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2})
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         
         driver = webdriver.Chrome(options=options)
         stealth(
@@ -107,30 +107,34 @@ class Flats_Full_Info:
         self.driver.get(url)
         
     async def get_full_info(self) -> list:
-        name =          await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[2]/section/div/div/div[1]/h1')
-        district_id =   await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[2]/section/div/div/div[2]/address/div/div/a[2]')
+        name = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[2]/section/div/div/div[1]/h1')
+        district_id = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[2]/section/div/div/div[2]/address/div/div/a[2]')
         if await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[1]/div[4]/div/div[1]/span'):
-            price =     await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[1]/div[4]/div/div[1]/span')
+            price = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[1]/div[4]/div/div[1]/span')
         else:
-            price =     await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[1]/div[3]/div/div[1]/span')
+            price = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[1]/div[3]/div/div[1]/span')
         time_to_metro = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[2]/section/div/div/div[2]/address/ul[1]/li[1]/span')
         nearest_metro = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[2]/section/div/div/div[2]/address/ul[1]/li[1]/a')
-        rub_m2 =        await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[3]/div/div/div[1]/span[2]')
-        main_square =   await self.get_item_by_text('Общая площадь')
-        live_square =   await self.get_item_by_text('Жилая площадь')
+        rub_m2 = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[3]/div/div/div[1]/span[2]')
+        main_square = await self.get_item_by_text('Общая площадь')
+        live_square = await self.get_item_by_text('Жилая площадь')
         try:
-            floor =         (await self.get_item_by_text('Этаж')).split(' из ')[0]
-            max_floor =     (await self.get_item_by_text('Этаж')).split(' из ')[1]
+            floor = (await self.get_item_by_text('Этаж')).split(' из ')[0]
+            max_floor = (await self.get_item_by_text('Этаж')).split(' из ')[1]
         except Exception:
             floor = None
             max_floor = None
-        house_ready_year =      await self.get_item_by_text('Год сдачи')
-        house_full_ready_year = await self.get_item_by_text('Год постройки')
-        ready_or_not =  await self.get_item_by_text('Дом')
-        finishing =     await self.get_item_by_text('Отделка')
-        parking =       await self.get_item_by_text('Парковка')
+            
+        if await self.get_item_by_text('Год сдачи'):
+            house_ready_year = await self.get_item_by_text('Год сдачи')
+        else:
+            house_ready_year = await self.get_item_by_text('Год постройки')
+            
+        ready_or_not = await self.get_item_by_text('Дом')
+        finishing = await self.get_item_by_text('Отделка')
+        parking = await self.get_item_by_text('Парковка')
         ceiling_height= await self.get_item_by_text('Высота потолков')
-        raiting =       await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[1]/div[1]/div/div/span')
+        raiting = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[1]/div[1]/div/div/span')
         return list((name, district_id, price, time_to_metro, nearest_metro, \
             rub_m2, main_square, live_square, floor, max_floor, house_ready_year, \
-                house_full_ready_year, ready_or_not, finishing, parking, ceiling_height, raiting))
+                ready_or_not, finishing, parking, ceiling_height, raiting))

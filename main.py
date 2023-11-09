@@ -2,13 +2,7 @@ from flats_parses import Flats_Full_Info, Flats_URL
 from pagination import Pagination
 from file_operation import save_to_csv
 import asyncio
-import tracemalloc
 
-
-tracemalloc.start()
-
-URL = 'https://www.cian.ru/cat.php?deal_type=sale&engine_version=2&offer_type=flat&p=1&region=1&room2=1'
-PATH = 'data/flats_info.csv'
 
 class Cian_Parser:
     
@@ -41,21 +35,27 @@ class Cian_Parser:
                 
             details_parser = Flats_Full_Info()
             detailed_flats = []
-            k = 0
+            
             for flat in all_flats:
                 await details_parser.get_page(flat)
                 await save_to_csv(self.path, (* await details_parser.get_full_info(), all_time_to_metro[k]))
-                k += 1
-            
-            print(detailed_flats)
             
         except Exception as ex_:
             print(ex_) 
         finally:
             if parser.driver:
                 parser.driver.close()
+                
         
 if __name__ == '__main__':
+    
+    import tracemalloc
+    
+    tracemalloc.start()
+    
+    URL = 'https://www.cian.ru/cat.php?deal_type=sale&engine_version=2&offer_type=flat&p=1&region=1&room2=1'
+    PATH = 'data/flats_info.csv'
+    
     parser = Cian_Parser(URL=URL, PATH=PATH)
     asyncio.run(parser.scrape_flats_details())
         

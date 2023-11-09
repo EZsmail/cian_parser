@@ -3,7 +3,6 @@ import json
 import os
 
 
-
 async def save_to_json(path: str, data: dict, page: int) -> None:
     try:
         async with open(path, 'w') as f:
@@ -27,19 +26,18 @@ async def save_to_csv(path: str, data: list) -> None:
                     'price',
                     'time_to_metro',
                     'nearest_metro', 
-                    'rub_to_m2',
+                    'price_per_square_meter ',
                     'main_square', 
                     'live_square', 
                     'floor',
-                    'max_floor', 
+                    'total_square_footage', 
                     'house_ready_year',
-                    'house_full_ready_year', 
-                    'ready_or_not', 
+                    'surrendered_or_not ', 
                     'finishing', 
                     'parking', 
                     'ceiling_height', 
-                    'raiting',
-                    'car_or_on_foot'
+                    'builder_rating ',
+                    'how_to_get_to_the_subway '
                 ]
             )
             writer.writerow(data)
