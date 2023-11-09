@@ -64,4 +64,4 @@ Go to next page using the `GoToTheNextPage()` function:
 
 
 ## Developer ##
-My site: [link](https://y-a-r-i-k.github.io/)
+My site: [link](https://ezsmail.github.io/Profile/)
