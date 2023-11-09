@@ -14,7 +14,8 @@ class Flats_URL:
         options.add_argument('start-maximized')
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
-        options.add_argument("--headless")
+        options.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2})
+        # options.add_argument("--headless")
         
         driver = webdriver.Chrome(options=options)
         stealth(
@@ -63,7 +64,8 @@ class Flats_Full_Info:
         options.add_argument('start-maximized')
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
-        options.add_argument("--headless")
+        options.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2})
+        # options.add_argument("--headless")
         
         driver = webdriver.Chrome(options=options)
         stealth(

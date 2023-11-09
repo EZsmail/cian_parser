@@ -13,7 +13,7 @@ class Pagination:
         except Exception as ex_:
             print(ex_)
             
-    async def HasNextPage(self) -> None:
+    async def HasNextPage(self) -> bool:
         try:
             self.parser.driver.find_element(By.CSS_SELECTOR, self.next_button_selector)
             return True
