@@ -1,6 +1,6 @@
-from cian_parser.flats_parses import Flats_Full_Info, Flats_URL
-from cian_parser.pagination import Pagination
-from cian_parser.file_operation import save_to_csv
+from parser_cian.flats_parses import Flats_Full_Info, Flats_URL
+from parser_cian.pagination import Pagination
+from parser_cian.file_operation import save_to_csv
 import asyncio
 
 
