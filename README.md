@@ -61,29 +61,6 @@ Go to next page using the `GoToTheNextPage()` function:
 
     await pagination.GoToTheNextPage()
 
-Writing the contents of an entire file to a variable line by line using the `readlines()` function:
-
-    temp = File(path='test.txt').readlines()
-
-
-Write only the first line from a file using the `readline()` function:
-
-    temp = File(path='test.txt').readline()
-
-
-Writing data from a variable to a file using write() (overwriting or creating a file):
-
-    temp = "Test data"
-    File(path='test.txt', data=temp).write()
-    
-
-Adding data from a variable to a file using write() (or creating a file):
-
-    temp = "Test data"
-    File(path='test.txt', data=temp).add()
-
-
-----------
 
 
 ## Developer ##
