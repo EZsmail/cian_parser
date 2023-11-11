@@ -79,5 +79,5 @@ class Cian_Parser:
                 parser.driver.close()
                 
     def start_parsing(self):
-        asyncio.run(asyncio.run(self.get_data()))
+        asyncio.run(self.get_data())
             
