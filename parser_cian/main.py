@@ -58,9 +58,6 @@ class Cian_Parser:
 
             all_flats = np.array_split(all_flats, len(all_flats) // 20)
             
-            print(all_flats)
-            print(len(all_flats))
-            
             try:
                 print(len(all_flats[0]))
             except Exception as ex:
