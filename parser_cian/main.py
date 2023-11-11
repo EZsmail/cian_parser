@@ -58,19 +58,12 @@ class Cian_Parser:
 
             all_flats = np.array_split(all_flats, len(all_flats) // 20)
             
-            try:
-                print(len(all_flats[0]))
-            except Exception as ex:
-                pass
-            
             for part_flat in all_flats:
                 
                 tasks = [get_info(flat) for flat in part_flat.tolist()]
                 csv_data = await asyncio.gather(*tasks) 
                 
                 await save_to_csv(self.path, csv_data, self.boost)
-
-        
 
         except Exception as ex_:
             print(ex_) 
