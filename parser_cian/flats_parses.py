@@ -16,7 +16,7 @@ class Flats_URL:
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
         options.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2})
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         
         driver = webdriver.Chrome(options=options)
         stealth(
@@ -35,7 +35,6 @@ class Flats_URL:
     async def get_page(self, url) -> None:
         self.driver = await self.setup_driver()
         self.driver.get(url)
-        
         
     async def get_html(self) -> str:
         try:
@@ -63,14 +62,13 @@ class Flats_Full_Info:
         self.driver = None
         self.boost = boost
 
-        
     async def setup_driver(self) -> webdriver:
         options = webdriver.ChromeOptions()
         options.add_argument('start-maximized')
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
         options.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2})
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         
         driver = webdriver.Chrome(options=options)
         stealth(
@@ -114,7 +112,6 @@ class Flats_Full_Info:
         self.driver.get(url)
         metro_ = metro[url]
         if self.boost:
-            self.driver.implicitly_wait(2)
             target_element = self.driver.find_element(By.XPATH, '//*[@id="frontend-offer-card"]/div[2]/div[2]/div[5]/div')
             actions = ActionChains(self.driver)
             actions.move_to_element(target_element).perform()
@@ -140,7 +137,7 @@ class Flats_Full_Info:
             price = None
         
         try:
-            time_to_metro = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[2]/section/div/div/div[2]/address/ul[1]/li[1]/span')
+            time_to_metro = int((await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[2]/section/div/div/div[2]/address/ul[1]/li[1]/span')).split(' ')[0])
         except Exception as e:
             time_to_metro = None
         
