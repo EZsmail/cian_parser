@@ -42,9 +42,9 @@ Examples of all operations:
 
     parser = Cian_Parser(PATH, URL, BOOST, COUNT_PAGE)
 
-Receive all data of all apartments in CSV format using the `get_data()` function:
+Receive all data of all apartments in CSV format using the `start_parsing()` function:
 
-    asyncio.run(parser.get_data())
+    parser.start_parsing()
 
 If you want to create your own parser logic, then use the description of the other modules:
 

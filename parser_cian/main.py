@@ -70,11 +70,14 @@ class Cian_Parser:
                 
                 await save_to_csv(self.path, csv_data, self.boost)
 
-            
+        
 
         except Exception as ex_:
             print(ex_) 
         finally:
             if parser.driver:
                 parser.driver.close()
+                
+    def start_parsing(self):
+        asyncio.run(asyncio.run(self.get_data()))
             
