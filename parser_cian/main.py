@@ -6,11 +6,11 @@ import numpy as np
 
 class Cian_Parser:
     
-    def __init__(self, URL: str, PATH: str, boost: bool=False, count_page: int=5):
+    def __init__(self, URL: str, PATH: str, BOOST: bool=False, COUNT_PAGE: int=5):
         self.url = URL
         self.path = PATH
-        self.boost = boost
-        self.count_page = count_page
+        self.boost = BOOST
+        self.count_page = COUNT_PAGE
         
     async def get_data(self) -> None:
         

@@ -38,9 +38,9 @@ First, import everything from the library (use the `from `...` import *` constru
 
 Examples of all operations:
 
-Сreate an instance of a class `Cian_Parser` (PATH - file save path, URL - site url):
+Сreate an instance of a class `Cian_Parser` (PATH - file save path, URL - site url, BOOST (True or False) - you can also receive a seller rating, but the speed is reduced several times, COUNT_PAGE - how many pages of apartments do you want to receive):
 
-    parser = Cian_Parser(PATH, URL)
+    parser = Cian_Parser(PATH, URL, BOOST, COUNT_PAGE)
 
 Receive all data of all apartments in CSV format using the `get_data()` function:
 
