@@ -20,6 +20,6 @@ setup(
         "Operating System :: OS Independent",
     ],
     keywords='python parser requests cian realestate beautifulsoup dataset',
-    install_requires=['beautifulsoup4', 'selenium', 'lxml', 'selenium-stealth', 'aiogram', 'numpy'],
+    install_requires=['beautifulsoup4', 'selenium', 'lxml', 'selenium-stealth', 'asyncio', 'numpy'],
 )
     
