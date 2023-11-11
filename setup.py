@@ -5,7 +5,7 @@ with open('README.md', encoding='utf8') as file:
     
 setup(
     name='parser_cian',
-    version='0.0.5',
+    version='0.1/',
     description='Parser for easy data retrieval from cian.ru',
     url='https://github.com/EZsmail/cian_parser',
     author='Anatoly Gvozdev',

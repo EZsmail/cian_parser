@@ -1,13 +1,14 @@
 from selenium_stealth import stealth
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 from bs4 import BeautifulSoup
 
 
 class Flats_URL:
+    
     def __init__(self) -> None :
         self.driver = None
-
         
     async def setup_driver(self) -> webdriver:
         options = webdriver.ChromeOptions()
@@ -15,7 +16,7 @@ class Flats_URL:
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
         options.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2})
-        options.add_argument("--headless")
+        # options.add_argument("--headless")
         
         driver = webdriver.Chrome(options=options)
         stealth(
@@ -45,18 +46,22 @@ class Flats_URL:
     async def find_urls(self, html: str) -> list:
         soup = BeautifulSoup(html, 'lxml')
         boxes = soup.find_all(class_='_93444fe79c--general--BCXJ4')
-        urls = []
-        metro = []
+        urls: list = []
+        list_metro: dict = {}
         for box in boxes:
-            url = box.find(class_='_93444fe79c--link--eoxce').get('href')
-            metro_ = box.find(class_='_93444fe79c--remoteness--q8IXp').text.split(' ')[-1].replace('пешком', 'Пешком').replace('транспорте', 'На транспорте ')
-            urls.append(url)
-            metro.append(metro_)
-        return urls, metro
+            try:
+                url = box.find(class_='_93444fe79c--link--eoxce').get('href')
+                metro_ = box.find(class_='_93444fe79c--remoteness--q8IXp').text.split(' ')[-1].replace('транспорте', 'На транспорте').replace('пешком', 'Пешком')
+                urls.append(url)
+                list_metro[url] = metro_
+            except Exception as ex_:
+                print(ex_)
+        return set(urls), list_metro 
 
 class Flats_Full_Info:
-    def __init__(self):
+    def __init__(self, boost):
         self.driver = None
+        self.boost = boost
 
         
     async def setup_driver(self) -> webdriver:
@@ -65,7 +70,7 @@ class Flats_Full_Info:
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
         options.add_experimental_option("prefs", {"profile.managed_default_content_settings.images": 2})
-        options.add_argument("--headless")
+        # options.add_argument("--headless")
         
         driver = webdriver.Chrome(options=options)
         stealth(
@@ -102,22 +107,63 @@ class Flats_Full_Info:
         except Exception as ex:
             return None
         
-    async def get_page(self, url) -> None:
+    async def create_page(self) -> None:
         self.driver = await self.setup_driver()
+        
+    async def get_page(self, url: str, metro) -> None:
         self.driver.get(url)
+        metro_ = metro[url]
+        if self.boost:
+            self.driver.implicitly_wait(2)
+            target_element = self.driver.find_element(By.XPATH, '//*[@id="frontend-offer-card"]/div[2]/div[2]/div[5]/div')
+            actions = ActionChains(self.driver)
+            actions.move_to_element(target_element).perform()
+        return metro_
         
     async def get_full_info(self) -> list:
-        name = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[2]/section/div/div/div[1]/h1')
-        district_id = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[2]/section/div/div/div[2]/address/div/div/a[2]')
-        if await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[1]/div[4]/div/div[1]/span'):
-            price = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[1]/div[4]/div/div[1]/span')
-        else:
-            price = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[1]/div[3]/div/div[1]/span')
-        time_to_metro = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[2]/section/div/div/div[2]/address/ul[1]/li[1]/span')
-        nearest_metro = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[2]/section/div/div/div[2]/address/ul[1]/li[1]/a')
-        rub_m2 = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[3]/div/div/div[1]/span[2]')
-        main_square = await self.get_item_by_text('Общая площадь')
-        live_square = await self.get_item_by_text('Жилая площадь')
+        try:    
+            name = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[2]/section/div/div/div[1]/h1')
+        except Exception as e:
+            pass
+            
+        try:
+            district_id = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[2]/section/div/div/div[2]/address/div/div/a[2]')
+        except Exception as e:
+            pass
+        
+        try:
+            if await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[1]/div[4]/div/div[1]/span'):
+                price = int((await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[1]/div[4]/div/div[1]/span')).replace(' ₽', '').replace(' ', ''))
+            else:
+                price = int((await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[1]/div[3]/div/div[1]/span')).replace(' ₽', '').replace(' ', ''))
+        except Exception as e:
+            price = None
+        
+        try:
+            time_to_metro = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[2]/section/div/div/div[2]/address/ul[1]/li[1]/span')
+        except Exception as e:
+            time_to_metro = None
+        
+        try:
+            nearest_metro = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[2]/section/div/div/div[2]/address/ul[1]/li[1]/a')
+        except Exception as e:
+            nearest_metro = None
+        
+        try:
+            rub_m2 = int((await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[3]/div/div/div[1]/span[2]')).replace(' ₽/м²', '').replace(' ', ''))
+        except Exception as e:
+            rub_m2 = None
+        
+        try:
+            main_square = float((await self.get_item_by_text('Общая площадь')).split(' ')[0].replace(',', '.'))
+        except Exception as e:
+            main_square = None
+        
+        try:
+            live_square = float((await self.get_item_by_text('Жилая площадь')).split(' ')[0].replace(',', '.'))
+        except Exception as e:
+            live_square = None
+        
         try:
             floor = (await self.get_item_by_text('Этаж')).split(' из ')[0]
             max_floor = (await self.get_item_by_text('Этаж')).split(' из ')[1]
@@ -126,15 +172,49 @@ class Flats_Full_Info:
             max_floor = None
             
         if await self.get_item_by_text('Год сдачи'):
-            house_ready_year = await self.get_item_by_text('Год сдачи')
+            try:
+                house_ready_year = await self.get_item_by_text('Год сдачи')
+            except Exception as e:
+                house_ready_year = None
         else:
-            house_ready_year = await self.get_item_by_text('Год постройки')
+            try:
+                house_ready_year = await self.get_item_by_text('Год постройки')
+            except Exception as e:
+                house_ready_year = None
             
-        ready_or_not = await self.get_item_by_text('Дом')
-        finishing = await self.get_item_by_text('Отделка')
-        parking = await self.get_item_by_text('Парковка')
-        ceiling_height= await self.get_item_by_text('Высота потолков')
-        raiting = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[1]/div[1]/div/div/span')
-        return list((name, district_id, price, time_to_metro, nearest_metro, \
-            rub_m2, main_square, live_square, floor, max_floor, house_ready_year, \
-                ready_or_not, finishing, parking, ceiling_height, raiting))
+        try:
+            ready_or_not = await self.get_item_by_text('Дом')
+        except Exception as e:
+            ready_or_not = None
+        
+        try:
+            finishing = await self.get_item_by_text('Отделка')
+        except Exception as e:
+            finishing = None
+        
+        try:
+            parking = await self.get_item_by_text('Парковка')
+        except Exception as e:
+            parking = None
+        
+        try:
+            ceiling_height= float((await self.get_item_by_text('Высота потолков')).split(' ')[0].replace(',', '.'))
+        except Exception as e:
+            ceiling_height = None
+        
+        if self.boost:
+            
+            try:
+                raiting = await self.get_item_by_xpath('//*[@id="frontend-offer-card"]/div[2]/div[3]/div/div[1]/div[1]/div[1]/div/div/span')
+                return list((name, district_id, price, time_to_metro, nearest_metro, \
+                    rub_m2, main_square, live_square, floor, max_floor, house_ready_year, \
+                        ready_or_not, finishing, parking, ceiling_height, raiting))
+            except Exception as e:
+                raiting = None
+                return list((name, district_id, price, time_to_metro, nearest_metro, \
+                    rub_m2, main_square, live_square, floor, max_floor, house_ready_year, \
+                        ready_or_not, finishing, parking, ceiling_height, raiting))
+        else:
+            return list((name, district_id, price, time_to_metro, nearest_metro, \
+                rub_m2, main_square, live_square, floor, max_floor, house_ready_year, \
+                    ready_or_not, finishing, parking, ceiling_height))
